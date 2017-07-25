@@ -29,10 +29,11 @@
 			var close = randomNumber(open * .95, open * 1.05);
 			var high = randomNumber(Math.max(open, close), Math.max(open, close) * 1.1);
 			var low = randomNumber(Math.min(open, close) * .9, Math.min(open, close));
-			return {
-				t: date.valueOf(),
-				y: close
-			};
+			return close;
+//			return {
+//				t: date.valueOf(),
+//				y: close
+//			};
 		}
 
 		var dateFormat = 'MMMM DD YYYY';
@@ -42,7 +43,7 @@
 		while (data.length < 60) {
 			date = date.clone().add(1, 'd');
 			if (date.isoWeekday() <= 5) {
-				data.push(randomBar(date, data[data.length - 1].y));
+				data.push(randomBar(date, data[data.length - 1]));
 				labels.push(date);
 			}
 		}
@@ -51,7 +52,7 @@
 		ctx.canvas.width = 1000;
 		ctx.canvas.height = 300;
 		new Chart(ctx, {
-			type: 'line',
+			type: 'bar',
 			data: {
 				labels: labels,
 				datasets: [{
@@ -60,6 +61,9 @@
 				}]
 			},
 			options: {
+				gridLines: {
+					offsetGridLines: false
+				},
 				scales: {
 					xAxes: [{
 						type: 'time',
