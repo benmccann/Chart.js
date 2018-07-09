@@ -51,6 +51,7 @@ module.exports = function(Chart) {
 				// Model
 				_model: {
 					// Appearance
+					spanGaps: helpers.valueOrDefault(dataset.spanGaps, me.chart.options.spanGaps),
 					tension: custom.tension ? custom.tension : helpers.valueOrDefault(dataset.lineTension, lineElementOptions.tension),
 					backgroundColor: custom.backgroundColor ? custom.backgroundColor : (dataset.backgroundColor || lineElementOptions.backgroundColor),
 					borderWidth: custom.borderWidth ? custom.borderWidth : (dataset.borderWidth || lineElementOptions.borderWidth),
@@ -104,6 +105,7 @@ module.exports = function(Chart) {
 				_model: {
 					x: reset ? scale.xCenter : pointPosition.x, // value not used in dataset scale, but we want a consistent API between scales
 					y: reset ? scale.yCenter : pointPosition.y,
+					skip: custom.skip || isNaN(pointPosition.x) || isNaN(pointPosition.y),
 
 					// Appearance
 					tension: custom.tension ? custom.tension : helpers.valueOrDefault(dataset.lineTension, me.chart.options.elements.line.tension),
@@ -127,6 +129,13 @@ module.exports = function(Chart) {
 			var area = me.chart.chartArea;
 			var points = meta.data || [];
 			var i, ilen, model, controlPoints;
+
+			// Only consider points that are drawn in case the spanGaps option is used
+			if (meta.dataset._model.spanGaps) {
+				points = points.filter(function(pt) {
+					return !pt._model.skip;
+				});
+			}
 
 			function capControlPoint(pt, min, max) {
 				return Math.max(Math.min(pt, max), min);
