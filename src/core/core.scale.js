@@ -419,15 +419,16 @@ module.exports = Element.extend({
 			}
 		}
 
+		var tallestLabelHeightInLines = helpers.numberOfLabelLines(labels);
+		var lineSpace = tickFont.size * 0.5;
+		var tickPadding = me.options.ticks.padding;
+
+		// Store max number of lines used in labels for _autoSkip
+		me._maxLabelLines = tallestLabelHeightInLines;
+
 		// Don't bother fitting the ticks if we are not showing them
 		if (tickOpts.display && display) {
 			var largestTextWidth = helpers.longestText(me.ctx, tickFont.string, labels, me.longestTextCache);
-			var tallestLabelHeightInLines = helpers.numberOfLabelLines(labels);
-			var lineSpace = tickFont.size * 0.5;
-			var tickPadding = me.options.ticks.padding;
-
-			// Store max number of lines used in labels for _autoSkip
-			me._maxLabelLines = tallestLabelHeightInLines;
 
 			if (isHorizontal) {
 				// A horizontal axis is more constrained by the height.
