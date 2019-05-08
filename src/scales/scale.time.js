@@ -410,11 +410,19 @@ function computeOffsets(table, ticks, min, max, options) {
 
 function ticksFromTimestamps(scale, values, majorUnit) {
 	var ticks = [];
+	var startOf = scale._adapter.startOf;
 	var i, ilen, value, major;
 
 	for (i = 0, ilen = values.length; i < ilen; ++i) {
 		value = values[i];
-		major = majorUnit ? value === +scale._adapter.startOf(value, majorUnit) : false;
+		major = false;
+		if (majorUnit) {
+			if (i === 0) {
+				major = value === +startOf(value, majorUnit);
+			} else {
+				major = +startOf(value, majorUnit) !== +startOf(values[i - 1], majorUnit);
+			}
+		}
 
 		ticks.push({
 			value: value,
@@ -676,10 +684,10 @@ module.exports = Scale.extend({
 		var minorFormat = formats[me._unit];
 		var majorUnit = me._majorUnit;
 		var majorFormat = formats[majorUnit];
-		var majorTime = +adapter.startOf(time, majorUnit);
+		var isMajorTime = typeof index !== 'undefined' && ticks[index].major;
 		var tickOpts = options.ticks;
 		var majorTickOpts = tickOpts.major;
-		var major = majorTickOpts.enabled && majorUnit && majorFormat && time === majorTime;
+		var major = majorTickOpts.enabled && majorUnit && majorFormat && isMajorTime;
 		var label = adapter.format(time, format ? format : major ? majorFormat : minorFormat);
 		var nestedTickOpts = major ? majorTickOpts : tickOpts.minor;
 		var formatter = helpers.options.resolve([
@@ -779,7 +787,7 @@ module.exports = Scale.extend({
 		// pick the longest format (milliseconds) for guestimation
 		var format = displayFormats[timeOpts.unit] || displayFormats.millisecond;
 
-		var exampleLabel = me.tickFormatFunction(exampleTime, 0, [], format);
+		var exampleLabel = me.tickFormatFunction(exampleTime, undefined, [], format);
 		var tickLabelWidth = me.getLabelWidth(exampleLabel);
 		var innerWidth = me.isHorizontal() ? me.width : me.height;
 		var capacity = Math.floor(innerWidth / tickLabelWidth);
