@@ -644,7 +644,18 @@ class TimeScale extends Scale {
 			ticks.reverse();
 		}
 
-		return ticksFromTimestamps(me, ticks, me._majorUnit);
+		ticks = ticksFromTimestamps(me, ticks, me._majorUnit);
+
+		if (tickOpts.source === 'auto') {
+			me.ticks = ticks;
+			// me._length = me.isHorizontal() ? chart.width - me.margins.left - me.margins.right : chart.height - me.margins.top - me.margins.bottom;
+			me.generateTickLabels(ticks);
+			me.calculateTickRotation();
+			me.fit();
+			ticks = me._autoSkip(ticks);
+		}
+
+		return ticks;
 	}
 
 	getLabelForValue(value) {
