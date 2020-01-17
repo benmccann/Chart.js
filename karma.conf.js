@@ -53,6 +53,7 @@ module.exports = function(karma) {
 			{pattern: 'test/fixtures/**/*.js', included: false},
 			{pattern: 'test/fixtures/**/*.json', included: false},
 			{pattern: 'test/fixtures/**/*.png', included: false},
+			'node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
 			'node_modules/moment/min/moment.min.js',
 			'test/index.js',
 			'src/index.js'
@@ -84,7 +85,9 @@ module.exports = function(karma) {
 		// These settings deal with browser disconnects. We had seen test flakiness from Firefox
 		// [Firefox 56.0.0 (Linux 0.0.0)]: Disconnected (1 times), because no message in 10000 ms.
 		// https://github.com/jasmine/jasmine/issues/1327#issuecomment-332939551
-		browserDisconnectTolerance: 3
+		browserDisconnectTolerance: 3,
+		browserDisconnectTimeout: 1000000000,
+		browserNoActivityTimeout: 1000000000
 	});
 
 	// https://swizec.com/blog/how-to-run-javascript-tests-in-chrome-on-travis/swizec/6647
