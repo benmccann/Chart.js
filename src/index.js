@@ -48,9 +48,6 @@ Object.keys(scales).forEach(function(type) {
 	Chart.scaleService.registerScaleType(type, scale, scale._defaults);
 });
 
-// Load to register built-in adapters (as side effects)
-import './adapters';
-
 // Loading built-in plugins
 import plugins from './plugins';
 for (var k in plugins) {

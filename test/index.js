@@ -1,9 +1,10 @@
 'use strict';
 
-var fixture = require('./fixture');
-var Context = require('./context');
-var matchers = require('./matchers');
-var utils = require('./utils');
+require('chartjs-adapter-moment');
+const fixture = require('./fixture');
+const Context = require('./context');
+const matchers = require('./matchers');
+const utils = require('./utils');
 
 (function() {
 

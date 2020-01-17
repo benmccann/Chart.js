@@ -33,6 +33,7 @@
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "babel-preset-es2015-rollup": "^3.0.0",
+    "chartjs-adapter-moment": "^0.0.1",
     "clean-css": "^4.2.1",
     "coveralls": "^3.0.0",
     "eslint": "^6.0.0",
