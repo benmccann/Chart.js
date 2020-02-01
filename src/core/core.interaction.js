@@ -45,9 +45,9 @@ function parseVisibleItems(chart, handler) {
 
 /**
  * Helper function to get the items that intersect the event position
- * @param {ChartElement[]} items - elements to filter
+ * @param {Element[]} items - elements to filter
  * @param {object} position - the point to be nearest to
- * @return {ChartElement[]} the nearest items
+ * @return {Element[]} the nearest items
  */
 function getIntersectItems(chart, position) {
 	var elements = [];
@@ -67,7 +67,7 @@ function getIntersectItems(chart, position) {
  * @param {object} position - the point to be nearest to
  * @param {boolean} intersect - if true, only consider items that intersect the position
  * @param {function} distanceMetric - function to provide the distance between points
- * @return {ChartElement[]} the nearest items
+ * @return {Element[]} the nearest items
  */
 function getNearestItems(chart, position, intersect, distanceMetric) {
 	var minDistance = Number.POSITIVE_INFINITY;
@@ -181,7 +181,7 @@ module.exports = {
 		 * @param {Chart} chart - the chart we are returning items from
 		 * @param {Event} e - the event we are find things at
 		 * @param {IInteractionOptions} options - options to use during interaction
-		 * @return {Chart.Element[]} Array of elements that are under the point. If none are found, an empty array is returned
+		 * @return {Element[]} Array of elements that are under the point. If none are found, an empty array is returned
 		 */
 		index: indexMode,
 
@@ -192,7 +192,7 @@ module.exports = {
 		 * @param {Chart} chart - the chart we are returning items from
 		 * @param {Event} e - the event we are find things at
 		 * @param {IInteractionOptions} options - options to use during interaction
-		 * @return {Chart.Element[]} Array of elements that are under the point. If none are found, an empty array is returned
+		 * @return {Element[]} Array of elements that are under the point. If none are found, an empty array is returned
 		 */
 		dataset: function(chart, e, options) {
 			var position = getRelativePosition(e, chart);
@@ -223,7 +223,7 @@ module.exports = {
 		 * @function Chart.Interaction.modes.intersect
 		 * @param {Chart} chart - the chart we are returning items from
 		 * @param {Event} e - the event we are find things at
-		 * @return {Chart.Element[]} Array of elements that are under the point. If none are found, an empty array is returned
+		 * @return {Element[]} Array of elements that are under the point. If none are found, an empty array is returned
 		 */
 		point: function(chart, e) {
 			var position = getRelativePosition(e, chart);
@@ -236,7 +236,7 @@ module.exports = {
 		 * @param {Chart} chart - the chart we are returning items from
 		 * @param {Event} e - the event we are find things at
 		 * @param {IInteractionOptions} options - options to use
-		 * @return {Chart.Element[]} Array of elements that are under the point. If none are found, an empty array is returned
+		 * @return {Element[]} Array of elements that are under the point. If none are found, an empty array is returned
 		 */
 		nearest: function(chart, e, options) {
 			var position = getRelativePosition(e, chart);
@@ -251,7 +251,7 @@ module.exports = {
 		 * @param {Chart} chart - the chart we are returning items from
 		 * @param {Event} e - the event we are find things at
 		 * @param {IInteractionOptions} options - options to use
-		 * @return {Chart.Element[]} Array of elements that are under the point. If none are found, an empty array is returned
+		 * @return {Element[]} Array of elements that are under the point. If none are found, an empty array is returned
 		 */
 		x: function(chart, e, options) {
 			var position = getRelativePosition(e, chart);
@@ -282,7 +282,7 @@ module.exports = {
 		 * @param {Chart} chart - the chart we are returning items from
 		 * @param {Event} e - the event we are find things at
 		 * @param {IInteractionOptions} options - options to use
-		 * @return {Chart.Element[]} Array of elements that are under the point. If none are found, an empty array is returned
+		 * @return {Element[]} Array of elements that are under the point. If none are found, an empty array is returned
 		 */
 		y: function(chart, e, options) {
 			var position = getRelativePosition(e, chart);

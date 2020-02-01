@@ -23,8 +23,8 @@ function isVertical(vm) {
 
 /**
  * Helper function to get the bounds of the bar regardless of the orientation
- * @param bar {Chart.Element.Rectangle} the bar
- * @return {Bounds} bounds of the bar
+ * @param bar {Rectangle} the bar
+ * @return {object} bounds of the bar
  * @private
  */
 function getBarBounds(vm) {

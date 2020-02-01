@@ -106,7 +106,7 @@ var positioners = {
 	/**
 	 * Average mode places the tooltip at the average position of the elements shown
 	 * @function Chart.Tooltip.positioners.average
-	 * @param elements {ChartElement[]} the elements being displayed in the tooltip
+	 * @param elements {Element[]} the elements being displayed in the tooltip
 	 * @returns {object} tooltip position
 	 */
 	average: function(elements) {
@@ -138,7 +138,7 @@ var positioners = {
 	/**
 	 * Gets the tooltip position nearest of the item nearest to the event position
 	 * @function Chart.Tooltip.positioners.nearest
-	 * @param elements {Chart.Element[]} the tooltip elements
+	 * @param elements {Element[]} the tooltip elements
 	 * @param eventPosition {object} the position of the event in canvas coordinates
 	 * @returns {object} the tooltip position
 	 */
@@ -569,7 +569,7 @@ var exports = Element.extend({
 		var me = this;
 		var opts = me._options;
 
-		// Need to regenerate the model because its faster than using extend and it is necessary due to the optimization in Chart.Element.transition
+		// Need to regenerate the model because its faster than using extend and it is necessary due to the optimization in Element.transition
 		// that does _view = _model if ease === 1. This causes the 2nd tooltip update to set properties in both the view and model at the same time
 		// which breaks any animations.
 		var existingModel = me._model;
