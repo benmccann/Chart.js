@@ -18,7 +18,7 @@ const banner = `/*!
  */`;
 
 module.exports = [
-	// UMD builds
+	// UMD builds for script include users
 	// dist/Chart.min.js
 	// dist/Chart.js
 	{
@@ -59,8 +59,7 @@ module.exports = [
 		},
 	},
 
-	// ES6 builds
-	// dist/Chart.esm.min.js
+	// ES6 build for npm users
 	// dist/Chart.esm.js
 	{
 		input,
@@ -79,24 +78,5 @@ module.exports = [
 			format: 'esm',
 			indent: false,
 		},
-	},
-	{
-		input,
-		plugins: [
-			json(),
-			resolve(),
-			babel({envName: 'es6'}),
-			terser({
-				output: {
-					preamble: banner
-				}
-			})
-		],
-		output: {
-			name: 'Chart',
-			file: 'dist/Chart.esm.min.js',
-			format: 'esm',
-			indent: false,
-		},
-	},
+	}
 ];
