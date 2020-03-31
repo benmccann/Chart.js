@@ -232,41 +232,6 @@ function skipMajors(ticks, newTicks, majorIndices, spacing) {
 	}
 }
 
-/**
- * @param {Tick[]} ticks
- * @param {Tick[]} newTicks
- * @param {number} spacing
- * @param {number} [majorStart]
- * @param {number} [majorEnd]
- */
-function skip(ticks, newTicks, spacing, majorStart, majorEnd) {
-	const start = valueOrDefault(majorStart, 0);
-	const end = Math.min(valueOrDefault(majorEnd, ticks.length), ticks.length);
-	let count = 0;
-	let length, i, next;
-
-	spacing = Math.ceil(spacing);
-	if (majorEnd) {
-		length = majorEnd - majorStart;
-		spacing = length / Math.floor(length / spacing);
-	}
-
-	next = start;
-
-	while (next < 0) {
-		count++;
-		next = Math.round(start + count * spacing);
-	}
-
-	for (i = Math.max(start, 0); i < end; i++) {
-		if (i === next) {
-			newTicks.push(ticks[i]);
-			count++;
-			next = Math.round(start + count * spacing);
-		}
-	}
-}
-
 export default class Scale extends Element {
 
 	// eslint-disable-next-line max-statements
@@ -1036,17 +1001,75 @@ export default class Scale extends Element {
 		const spacing = calculateSpacing(majorIndices, ticks, ticksLimit);
 
 		if (numMajorIndices > 0) {
-			let i, ilen;
-			const avgMajorSpacing = numMajorIndices > 1 ? Math.round((last - first) / (numMajorIndices - 1)) : null;
-			skip(ticks, newTicks, spacing, isNullOrUndef(avgMajorSpacing) ? 0 : first - avgMajorSpacing, first);
-			for (i = 0, ilen = numMajorIndices - 1; i < ilen; i++) {
-				skip(ticks, newTicks, spacing, majorIndices[i], majorIndices[i + 1]);
+			let start = {index: 0, pixel: 0};
+			let end = {index: ticks.length, pixel: me._length};
+			if (numMajorIndices > 1) {
+				start = me._tickInfo(first);
+				end = me._tickInfo(last);
+				const avgMajorSpacing = Math.round((last - first) / (numMajorIndices - 1));
+				start.index -= avgMajorSpacing;
+				end.index -= avgMajorSpacing;
+				const avgMajorSpacingPixels = Math.round((end.pixel - start.pixel) / (numMajorIndices - 1));
+				start.pixel -= avgMajorSpacingPixels;
+				end.pixel += avgMajorSpacingPixels;
 			}
-			skip(ticks, newTicks, spacing, last, isNullOrUndef(avgMajorSpacing) ? ticks.length : last + avgMajorSpacing);
+			me._skip(ticks, newTicks, spacing, start, me._tickInfo(first));
+			for (let i = 0, ilen = numMajorIndices - 1; i < ilen; i++) {
+				me._skip(ticks, newTicks, spacing, me._tickInfo(majorIndices[i]), me._tickInfo(majorIndices[i + 1]));
+			}
+			me._skip(ticks, newTicks, spacing, me._tickInfo(last), end);
 			return newTicks;
 		}
-		skip(ticks, newTicks, spacing);
+		me._skip(ticks, newTicks, spacing);
 		return newTicks;
+	}
+
+	/**
+	 * @param {number} index
+	 * @return {{index:number, pixel:number}}
+	 */
+	_tickInfo(index) {
+		return {index, pixel: this.getPixelForTick(index)};
+	}
+
+	/**
+	 * @param {Tick[]} ticks - all the ticks
+	 * @param {Tick[]} newTicks - the non-skipped ticks will be added to this array
+	 * @param {number} spacing - the number of ticks to skip
+	 * @param {{index:number, pixel:number}} [majorStart] the major tick to start at
+	 * @param {{index:number, pixel:number}} [majorEnd] the major tick to end at
+	 */
+	_skip(ticks, newTicks, spacing, majorStart, majorEnd) {
+		const me = this;
+		let start, end, length, numTicks;
+		if (majorEnd) {
+			start = majorStart.pixel;
+			end = majorEnd.pixel;
+			length = end - start;
+			numTicks = majorEnd.index - majorStart.index + 1;
+			// distance = length / Math.floor(numTicks / spacing);
+		} else {
+			start = 0;
+			end = me._length;
+			length = end - start;
+			numTicks = ticks.length;
+			// distance = length / numTicks * Math.ceil(spacing);
+		}
+		const distance = length / numTicks * spacing;
+
+		let next = start;
+
+		while (next < 0) {
+			next += distance;
+		}
+
+		for (let i = majorStart ? majorStart.index : 0; i < ticks.length && next < end; i++) {
+			const pixel = me.getPixelForTick(i);
+			if (pixel >= next) {
+				newTicks.push(ticks[i]);
+				next = pixel + distance;
+			}
+		}
 	}
 
 	/**
