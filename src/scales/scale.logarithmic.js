@@ -21,12 +21,13 @@ function finiteOrDefault(value, def) {
  */
 function generateTicks(generationOptions, dataRange) {
 	const endExp = Math.floor(log10(dataRange.max));
-	const endSignificand = Math.ceil(dataRange.max / Math.pow(10, endExp));
+	const endSignificand = Math.ceil(dataRange.max * 1.05 / Math.pow(10, endExp));
 	const ticks = [];
-	let tickVal = finiteOrDefault(generationOptions.min, Math.pow(10, Math.floor(log10(dataRange.min))));
-	let exp = Math.floor(log10(tickVal));
-	let significand = Math.floor(tickVal / Math.pow(10, exp));
+	const startVal = finiteOrDefault(generationOptions.min, Math.floor(dataRange.min * 0.95));
+	let exp = Math.max(Math.floor(log10(startVal)) - 1, 1);
+	let significand = Math.max(Math.floor(startVal / Math.pow(10, exp)), 1);
 	let precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
+	let tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
 
 	do {
 		ticks.push({value: tickVal, major: isMajor(tickVal)});
@@ -37,13 +38,12 @@ function generateTicks(generationOptions, dataRange) {
 			++exp;
 			precision = exp >= 0 ? 1 : precision;
 		}
-
 		tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
 	} while (exp < endExp || (exp === endExp && significand < endSignificand));
 
+	tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
 	const lastTick = finiteOrDefault(generationOptions.max, tickVal);
 	ticks.push({value: lastTick, major: isMajor(tickVal)});
-
 	return ticks;
 }
 
